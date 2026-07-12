@@ -1,0 +1,11 @@
+name = "fornax"
+main = "build/index.js"
+compatibility_date = "2026-07-11"
+
+[build]
+command = "set CI=true&& cargo install -q \"worker-build@^0.8\" && worker-build --release && cd src-vite && pnpm install && pnpm run build"
+
+[assets]
+directory = "src-vite/dist"
+run_worker_first = ["/api/*"]
+not_found_handling = "single-page-application"
