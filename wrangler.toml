@@ -9,3 +9,8 @@ command = "set CI=true&& cargo install -q \"worker-build@^0.8\" && worker-build 
 directory = "src-vite/dist"
 run_worker_first = ["/api/*"]
 not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fornax-db"
+database_id = "48975adc-c9d9-4858-bf0d-15f20ac1dc68"
