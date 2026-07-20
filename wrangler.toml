@@ -14,3 +14,15 @@ not_found_handling = "single-page-application"
 binding = "DB"
 database_name = "fornax-db"
 database_id = "48975adc-c9d9-4858-bf0d-15f20ac1dc68"
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+[[send_email]]
+name = "EMAIL"
+remote = true
+
+[[kv_namespaces]]
+binding = "KV"
+id = "9bffaebe5d6c46f38854fc8504a22d8c"

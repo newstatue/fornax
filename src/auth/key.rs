@@ -1,0 +1,1 @@
+pub const EMAIL_CODE:&str = "auth-email-code:";
