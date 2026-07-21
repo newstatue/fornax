@@ -83,8 +83,14 @@ pub async fn send_code(
     let text = message::email_text(&code.to_string());
     let html = message::email_html(&code.to_string());
 
+    let email_from = state.env.var(&var::EMAIL_FROM)
+        .map_err(|e|{
+            console_error!("get var email from error {e}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        })?.to_string();
+
     let email = SendEmailBuilder::builder(
-        &var::EMAIL_FROM,
+        &email_from,
         &email_addr,
         message::EMAIL_SUBJECT,
     ).text(&text)
