@@ -26,3 +26,12 @@ remote = true
 [[kv_namespaces]]
 binding = "KV"
 id = "9bffaebe5d6c46f38854fc8504a22d8c"
+
+[vars]
+APP_NAME = "fornax"
+APP_ENV = "local"
+EMAIL_FROM = "support@forn.ax"
+EMAIL_CODE_EXPIRE = "300"
+
+[env.production.vars]
+APP_ENV = "remote"

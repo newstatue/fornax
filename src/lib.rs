@@ -5,6 +5,7 @@ mod auth;
 mod common;
 mod router;
 mod state;
+pub mod openapi;
 
 #[event(fetch)]
 async fn fetch(
