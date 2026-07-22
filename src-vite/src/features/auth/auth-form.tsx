@@ -18,19 +18,38 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp.tsx"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import * as React from "react"
 import { api } from "@/api"
 import { toast } from "sonner"
+import { useAuthStore } from "@/store/auth.store.ts"
 
-export function AuthForm() {
+type AuthFormProps = {
+  onSuccess?: () => void
+}
+
+export function AuthForm({ onSuccess }: AuthFormProps) {
   const [email, setEmail] = useState("")
   const [code, setCode] = useState("")
   const [isSendingCode, setIsSendingCode] = useState(false)
   const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [cd,setCd] = useState(0)
 
-  const codeCompleted = code.length === 6
+  const codeCompleted = code.length === 5
+
+  useEffect(() => {
+    if (cd <= 0){
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setCd((current)=> current - 1)
+    },1000)
+
+    return () => window.clearTimeout(timer)
+  },[cd])
+
   const handleSendCode = async () => {
     setIsSendingCode(true)
 
@@ -38,36 +57,41 @@ export function AuthForm() {
       const { data } = await api.sendCode({
         email: email,
       })
-
-      setEmail(email)
       toast.success(data.msg ?? "验证码发送成功")
+
+      setCd(data.data?.cd ?? 60)
+
     } catch (error) {
       console.error("发送验证码失败：", error)
-      toast.error("验证码发送失败，请稍后重试")
     } finally {
       setIsSendingCode(false)
     }
   }
 
-  const handleSubmit = async (
-    event: React.SyntheticEvent<HTMLFormElement, SubmitEvent>
-  ) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsLoggingIn(true)
 
     try {
       const { data } = await api.login({
-        email: email,
+        email,
         code,
       })
 
-      localStorage.setItem("token", data.token)
+      const token = data.data?.token
 
-      toast.success("登录成功")
+      if (!token) {
+        console.error("登录失败，响应中不包含token")
+        toast.error("登录成功，但未返回 Token")
+        return
+      }
 
+      useAuthStore.getState().setToken(token)
+
+      toast.success(data.msg ?? "登录成功")
+      onSuccess?.()
     } catch (error) {
       console.error("登录失败：", error)
-      toast.error("登录失败，请检查邮箱和验证码")
     } finally {
       setIsLoggingIn(false)
     }
@@ -96,9 +120,9 @@ export function AuthForm() {
               </Field>
               <Field>
                 <FieldLabel htmlFor="code">验证码</FieldLabel>
-                <div className="flex justify-between">
+                <div className="flex flex-wrap justify-between gap-3">
                   <InputOTP
-                    maxLength={6}
+                    maxLength={5}
                     defaultValue=""
                     value={code}
                     onChange={setCode}
@@ -112,16 +136,22 @@ export function AuthForm() {
                       <InputOTPSlot index={2} />
                       <InputOTPSlot index={3} />
                       <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
                     </InputOTPGroup>
                   </InputOTP>
-                  <Button type="button"
-                          disabled={isSendingCode}
-                          onClick={handleSendCode}>发送验证码</Button>
+                  <Button
+                    className="flex-1"
+                    type="button"
+                    disabled={isSendingCode || !email || cd > 0}
+                    onClick={handleSendCode}
+                  >
+                    {isSendingCode ? "发送中..." : cd > 0 ? `${cd}秒后重试`: "发送验证码"}
+                  </Button>
                 </div>
               </Field>
               <Field>
-                <Button type="submit" disabled={!codeCompleted}>登录</Button>
+                <Button type="submit" disabled={!codeCompleted || !email}>
+                  登录
+                </Button>
                 <FieldDescription className="text-center">
                   没有帐户会自动注册
                 </FieldDescription>

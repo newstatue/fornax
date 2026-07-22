@@ -57,16 +57,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResp"
+                  "$ref": "#/components/schemas/ApiResp_LoginResp"
                 }
               }
             }
           },
           "400": {
-            "description": "邮箱或验证码不能为空"
+            "description": "邮箱或验证码格式错误"
           },
           "401": {
             "description": "验证码错误或已过期"
+          },
+          "403": {
+            "description": "用户已被停用"
           },
           "500": {
             "description": "服务器内部错误"
@@ -96,13 +99,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SendCodeResp"
+                  "$ref": "#/components/schemas/ApiResp_SendCodeResp"
                 }
               }
             }
           },
           "400": {
-            "description": "邮箱不能为空"
+            "description": "邮箱格式错误"
+          },
+          "429": {
+            "description": "验证码发送过于频繁"
           },
           "500": {
             "description": "服务器内部错误"
@@ -113,6 +119,94 @@
   },
   "components": {
     "schemas": {
+      "ApiResp_LoginResp": {
+        "type": "object",
+        "required": [
+          "code",
+          "msg"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "token"
+            ],
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            }
+          },
+          "errors": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "propertyNames": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResp_SendCodeResp": {
+        "type": "object",
+        "required": [
+          "code",
+          "msg"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "cd"
+            ],
+            "properties": {
+              "cd": {
+                "type": "integer",
+                "format": "int64",
+                "minimum": 0
+              }
+            }
+          },
+          "errors": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "propertyNames": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "type": "string"
+          }
+        }
+      },
       "LoginReq": {
         "type": "object",
         "required": [
@@ -153,11 +247,13 @@
       "SendCodeResp": {
         "type": "object",
         "required": [
-          "msg"
+          "cd"
         ],
         "properties": {
-          "msg": {
-            "type": "string"
+          "cd": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
           }
         }
       }

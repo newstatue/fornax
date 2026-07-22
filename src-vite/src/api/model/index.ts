@@ -5,6 +5,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './apiRespLoginResp';
+export * from './apiRespLoginRespData';
+export * from './apiRespLoginRespErrors';
+export * from './apiRespSendCodeResp';
+export * from './apiRespSendCodeRespData';
+export * from './apiRespSendCodeRespErrors';
 export * from './loginReq';
 export * from './loginResp';
 export * from './sendCodeReq';

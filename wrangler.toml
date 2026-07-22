@@ -27,8 +27,13 @@ remote = true
 binding = "KV"
 id = "9bffaebe5d6c46f38854fc8504a22d8c"
 
+#[[flagship]]
+#binding = "FLAG"
+#app_id = "81661e24-d3d8-43ec-b27b-1ac3973f1dcd"
+
 [vars]
 APP_NAME = "fornax"
 APP_ENV = "remote"
 EMAIL_FROM = "support@forn.ax"
 EMAIL_CODE_EXPIRE = "300"
+AUTH_CODE_CD = "60"

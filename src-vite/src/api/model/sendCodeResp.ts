@@ -6,5 +6,6 @@
  */
 
 export interface SendCodeResp {
-  msg: string;
+  /** @minimum 0 */
+  cd: number;
 }
