@@ -2,7 +2,7 @@ import { defineConfig } from "orval"
 
 export default defineConfig({
   api: {
-    input: "../openapi.json",
+    input: "./openapi.json",
 
     output: {
       target: "./src/api/generated.ts",
