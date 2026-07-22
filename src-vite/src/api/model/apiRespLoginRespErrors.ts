@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface SendCodeResp {
-  /** @minimum 0 */
-  cd: number;
-}
+/**
+ * @nullable
+ */
+export type ApiRespLoginRespErrors = {[key: string]: string[]} | null;

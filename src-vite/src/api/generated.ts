@@ -12,10 +12,10 @@ import type {
 } from 'axios';
 
 import type {
+  ApiRespLoginResp,
+  ApiRespSendCodeResp,
   LoginReq,
-  LoginResp,
-  SendCodeReq,
-  SendCodeResp
+  SendCodeReq
 } from './model';
 
 export const getFornax = (axiosInstance: AxiosInstance = axios.default) => {
@@ -29,7 +29,7 @@ const root = (
 
 const login = (
     loginReq: LoginReq, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<LoginResp>> => {
+ ): Promise<AxiosResponse<ApiRespLoginResp>> => {
     return axiosInstance.post(
       `/api/auth/login`,
       loginReq,options
@@ -38,7 +38,7 @@ const login = (
 
 const sendCode = (
     sendCodeReq: SendCodeReq, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<SendCodeResp>> => {
+ ): Promise<AxiosResponse<ApiRespSendCodeResp>> => {
     return axiosInstance.post(
       `/api/auth/send-code`,
       sendCodeReq,options
@@ -47,5 +47,5 @@ const sendCode = (
 
 return {root,login,sendCode}};
 export type RootResult = AxiosResponse<void>
-export type LoginResult = AxiosResponse<LoginResp>
-export type SendCodeResult = AxiosResponse<SendCodeResp>
+export type LoginResult = AxiosResponse<ApiRespLoginResp>
+export type SendCodeResult = AxiosResponse<ApiRespSendCodeResp>

@@ -5,7 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface SendCodeResp {
+export type ApiRespSendCodeRespData = {
   /** @minimum 0 */
   cd: number;
-}
+};
